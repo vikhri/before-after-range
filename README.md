@@ -1,58 +1,56 @@
-# До/После с помощью CSS и 1 строчки JS
+# Before/After with CSS and a few lines of JS
 
-Деплой: https://vikhri.github.io/before-after-range/
+Deployment: [https://vikhri.github.io/before-after-range/](https://vikhri.github.io/before-after-range/)
 
+### Used:
+CSS variables, masks, linear gradient
 
-### Используются: 
-css переменные, маски, линейный градиент
+## How It Works:
 
-## Как это работает:
+The markup consists of a container with 2 images and an input[type="range"].
 
-Разметка представляет собой контейнер с 2-мя картинками и input[type="range"].
-
-Шаг 1. Ставим картинки встанут на одно и тоже место внутри контейнера. Контейнеру с картинками задаем display grid. А секциям картинок grid-area 1/1. 
+Step 1. Position the images on the same spot inside the container. Apply grid display to the container with images. Assign grid-area 1/1 to the image sections.
 
 ```
 .compare {
-  position: relative;
-  display: grid;
+  position: relative;
+  display: grid;
 
-  > * {
-    grid-area: 1 / 1;
-  }
+  > * {
+    grid-area: 1 / 1;
+  }
 
-  > section {
-    display: grid;
-    place-content: center;
-  }
+  > section {
+    display: grid;
+    place-content: center;
+  }
+}
 ```
 
-Шаг 2. Превращаем инпут в вертикальную полоску. Для этого делаем прозрачным бэкраунд инпута, и вид стилизуем контролер. 
-
+Step 2. Convert the input into a vertical stripe. Make the input background transparent and style the controller.
 ```
 input[type="range"] {
-    z-index: 2;
-    appearance: none;
-    background: transparent;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+    z-index: 2;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   
-    &::-webkit-slider-thumb {
-      appearance: none;
-      width: 2px;
-      height: 100dvh;
-      background-color: lightgray;
-    }
-    &::-moz-range-thumb {
-      appearance: none;
-      width: 2px;
-      height: 100dvh;
-      background-color: lightgray;
-    }
-  }
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 2px;
+      height: 100dvh;
+      background-color: lightgray;
+    }
+    &::-moz-range-thumb {
+      appearance: none;
+      width: 2px;
+      height: 100dvh;
+      background-color: lightgray;
+    }
+  }
 ```
-
-Шаг 3. Задаем каждой картинке маску, которая будет скрывать часть картинки.
+Step 3. Apply a mask to each image, which will hide a portion of the image.
 
 ```
 .before {
@@ -63,14 +61,20 @@ input[type="range"] {
 }
 ```
 
-Маска определяет прозрачность определенных областей элемента. Всё чёрное под маской остается видимым, всё прозрачное становится невидимым.
-Если вставить этот градиент просто в свойство бэкраунд, то вы увидите наполовину черный, наполовину прозрачный элемент.
+The mask determines the transparency of specific areas of the element. Anything black under the mask remains visible, anything transparent becomes invisible. If you simply insert this gradient into the background property, you'll see the element divided in half, half black and half transparent.
 
-Отличие между `.before` и `.after` в данных строках кода заключается в порядке цветов в градиентах. В before градиентчерный до 50% потом прозрачный. В after с точностью наоборот.
+The difference between .before and .after lies in the order of colors in the gradients. In 'before', the gradient is black up to 50%, then transparent. In 'after', it's the opposite.
 
-Подставим вместо 50% - css переменную var(--pos). Меняя значения --pos, мы сможем смещать границу градиента в маске. 
+Instead of using 50%, let's use a CSS variable var(--pos). By changing the --pos value, we can shift the gradient boundary in the mask.
 
+Step 4. Change the value of the variable responsible for the gradient boundary in the mask. In JS, add an input listener, assigning the slider value to the --pos variable.
 
-Шаг 4. Меняем значение переменной, отвечающей за границу градиента в маске. В js вешаем листенер на input, и значение ползунка присаваеваем переменной --pos.
+```
+const range = document.getElementById("range");
 
-Готово!
+range.addEventListener("input", () => {
+  document.body.style.setProperty("--pos", range.value + "%");
+});
+```
+
+That's it!
